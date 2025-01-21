@@ -29,6 +29,19 @@ app.get("/read/:fileName", (req, res) => {
     });
 });
 
+app.put("/update/:fileName", (req, res) => {
+    const { fileName } = req.params;
+    const filePath = "./uploads/" + fileName;
+    const {newFileData} = req.body;
+    fs.appendFile(filePath, newFileData, (error) => {
+        if (error) {
+            res.send("File not updated!");
+        } else {
+            res.send("File updated successfully.");
+        }
+    });
+});
+
 
 
 
