@@ -42,7 +42,17 @@ app.put("/update/:fileName", (req, res) => {
     });
 });
 
-
+app.delete("/delete/:fileName", (req, res) => {
+    const {fileName} = req.params;
+    const filePath = "./uploads/" + fileName;
+    fs.unlink(filePath, (error) => {
+        if (error) {
+            res.send("File not deleted!");
+        }else{
+            res.send("File deleted successfully!");
+        }
+    });
+});
 
 
 app.listen(3000, () => {
