@@ -18,6 +18,17 @@ app.post("/create", (req, res) => {
     });
 });
 
+app.get("/read/:fileName", (req, res) => {
+    const { fileName } = req.params;
+    const filePath = "./uploads/" + fileName;
+    fs.readFile(filePath, (error, data) => {
+        if (error) {
+            res.send("File reading failed.");
+        }
+        return res.send(data);
+    });
+});
+
 
 
 
