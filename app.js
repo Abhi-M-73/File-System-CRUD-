@@ -1,3 +1,4 @@
+const { error } = require('console');
 const express = require('express');
 const fs = require('fs');
 
@@ -21,7 +22,7 @@ app.post("/create", (req, res) => {
 app.get("/read/:fileName", (req, res) => {
     const { fileName } = req.params;
     const filePath = "./uploads/" + fileName;
-    fs.readFile(filePath, (error, data) => {
+    fs.readFile(filePath, { encoding: "utf-8" }, (error, data) => {
         if (error) {
             res.send("File reading failed.");
         }
@@ -29,11 +30,11 @@ app.get("/read/:fileName", (req, res) => {
     });
 });
 
-app.put("/update/:fileName", (req, res) => {
+app.patch("/update/:fileName", (req, res) => {
     const { fileName } = req.params;
     const filePath = "./uploads/" + fileName;
-    const {newFileData} = req.body;
-    fs.appendFile(filePath, newFileData, (error) => {
+    const { newFileData } = req.body;
+    fs.writeFile(filePath, newFileData, (error) => {
         if (error) {
             res.send("File not updated!");
         } else {
@@ -43,16 +44,26 @@ app.put("/update/:fileName", (req, res) => {
 });
 
 app.delete("/delete/:fileName", (req, res) => {
-    const {fileName} = req.params;
+    const { fileName } = req.params;
     const filePath = "./uploads/" + fileName;
     fs.unlink(filePath, (error) => {
         if (error) {
             res.send("File not deleted!");
-        }else{
+        } else {
             res.send("File deleted successfully!");
         }
     });
 });
+
+app.get("/view-all", (req, res) => {
+    fs.readdir("./uploads", (error, files) => {
+        if (error) {
+            res.send("Error to get all files");
+        } else {
+            res.send(files);
+        }
+    })
+})
 
 
 app.listen(3000, () => {
